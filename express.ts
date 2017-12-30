@@ -6,7 +6,7 @@ const portNumber = 8081;
 const app = express();
 
 app.get('/', (request, response) => {
-    response.send('You requested ' + request.query.firstname + ' ' + request.query.lastname);
+    throw new Error('Deliberate Error!');
 })
 
 app.get('/one/', (request, response) => {
@@ -17,6 +17,13 @@ app.get('/two/', (request, response) => {
     response.send('handler two')
 })
 
+/**
+ * 处理错误
+ */
+app.use(function (error, request, response, next) {
+    console.error(error.message);
+    response.status(500).send('An error has occurred.')
+})
 app.listen(portNumber, 'localhost', () => {
     console.log("listening on localhost :" + portNumber);
 })
