@@ -1,18 +1,25 @@
 "use strict";
-/// <reference path="./node_modules/@types/node/index.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- *
- */
+var express = require("express");
 var http = require("http");
-var portNumber = 8080;
-function requestListener(request, response) {
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.write('Method:' + request.method + '\n');
-    response.write('Url' + request.url + '\n');
-    response.write('typescript on server');
-    response.end();
-}
-http.createServer(requestListener).listen(portNumber);
-console.log('Listening on localhost:' + portNumber);
+var path = require("path");
+var bodyParser = require("body-parser");
+var methodOverride = require("method-override");
+var routes = require("./routes/index");
+var book = require("./routes/book");
+var port = 8080;
+var app = express();
+app.set('port', port);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride());
+app.get('/', routes.index);
+app.get('/book', book.list);
+app.post('/book', book.submit);
+app.use(express.static('.'));
 //# sourceMappingURL=server.js.map

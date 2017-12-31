@@ -1,0 +1,37 @@
+extend layout
+
+block content
+    h1=title
+    p Welcome to the #{title} page.
+    //- p #{books}
+
+    form(method='post')
+      fieldset
+        legend Add a Book
+        div
+            label Title *
+                br
+                input(type='text', name='book_title', required)
+        div
+            label Author *
+                br
+                input(type='text', name='author', required)
+        div
+            label ISBN 
+                br
+                input(type='text', name='book_isbn',required)
+        div
+            button Save
+    table
+        thead
+            tr  
+                th Title
+                th  Author
+                th  ISBN
+        tbody
+            if books
+                each book in books
+                    tr
+                        td= book.title
+                        td= book.author
+                        td= book.isbn

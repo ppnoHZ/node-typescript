@@ -1,22 +1,45 @@
-/// <reference path="./node_modules/@types/node/index.d.ts" />
+import * as express from "express";
 
-/**
- * 
- */
 import * as http from "http";
 
-const portNumber = 8080;
+import * as path from "path";
 
-function requestListener(request: http.ServerRequest, response: http.ServerResponse) {
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.write('Method:' + request.method + '\n');
-    response.write('Url' + request.url + '\n');
-    response.write('typescript on server')
-    response.end();
-}
+import * as bodyParser from "body-parser";
+
+import * as methodOverride from "method-override";
+
+import * as routes from './routes/index';
+
+import * as book from './routes/book';
+
+const port = 8080;
+const app = express();
+
+app.set('port', port);
 
 
-http.createServer(requestListener).listen(portNumber);
+app.set('views', path.join(__dirname, 'views'));
+
+app.set('view engine', 'pug');
+
+http.createServer(app).listen(app.get('port'), () => {
+    console.log('Express server listening on port ' + app.get('port'));
+})
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride());
+
+app.get('/', routes.index);
+
+app.get('/book', book.list)
+app.post('/book', book.submit)
 
 
-console.log('Listening on localhost:' + portNumber);
+app.use(express.static('.'));
+
+
+
+
+
+
